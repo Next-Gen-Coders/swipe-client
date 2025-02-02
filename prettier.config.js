@@ -1,0 +1,6 @@
+export default {
+  tabWidth: 2,
+  semi: true,
+  singleQuote: false,
+  plugins: ["prettier-plugin-tailwindcss"],
+};
