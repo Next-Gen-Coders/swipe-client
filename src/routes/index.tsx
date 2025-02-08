@@ -1,19 +1,27 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { supabase } from "../../supabaseClient";
 import PrivateRoutes from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
+import { useSessionStore } from "../stores/sessionStore";
 
 const AppRoutes = () => {
-  const navigate = useNavigate();
-  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const { session, setSession } = useSessionStore();
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/onboard");
-    }
-  }, [isLoggedIn, navigate]);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
 
-  return isLoggedIn ? <PrivateRoutes /> : <PublicRoutes />;
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [setSession]);
+
+  return session ? <PrivateRoutes /> : <PublicRoutes />;
 };
 
 export default AppRoutes;
