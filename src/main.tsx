@@ -6,6 +6,9 @@ import App from "./App";
 import "./index.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import queryClient from "./lib/config/queryClient";
+import WebApp from '@twa-dev/sdk'
+
+WebApp.ready();
 
 // Create a client
 createRoot(document.getElementById("root")!).render(
@@ -14,7 +17,7 @@ createRoot(document.getElementById("root")!).render(
       <Router>
         <App />
       </Router>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       {/* Dev tools for debugging */}
     </QueryClientProvider>
   </StrictMode>,
