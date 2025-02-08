@@ -12,7 +12,6 @@ const SignIn = () => {
   return (
     <CtaButton
       onClick={signUp}
-      title="Sign In"
     >
       Let's Go!
     </CtaButton>
