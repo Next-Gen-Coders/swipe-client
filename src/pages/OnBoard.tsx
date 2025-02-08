@@ -1,7 +1,6 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 
-import CtaButton from "@/components/CtaButton";
 import SignIn from "@/components/SignIn";
 import logo from "@/assets/logo.png";
 import {
@@ -80,7 +79,7 @@ const OnBoard = () => {
         <img src={logo} alt="logo" className="h-24 w-auto" />
       </motion.div>
 
-      <motion.div
+      {/* <motion.div
         className="absolute top-[50%] flex w-full flex-col items-center justify-center gap-5 overflow-hidden text-center text-lg font-bold text-white"
         initial={{ height: 0, filter: "blur(10px)", padding: 0 }}
         animate={{
@@ -121,7 +120,7 @@ const OnBoard = () => {
             {riskRangeValue}%
           </span>
         </div>
-      </motion.div>
+      </motion.div> */}
 
       <motion.div
         initial={{ opacity: 0 }}
@@ -131,21 +130,10 @@ const OnBoard = () => {
           duration: 0.5,
           ease: "easeInOut",
         }}
-        className="absolute top-[80%] flex w-full items-center justify-center"
+        className="absolute top-[55%] flex w-full items-center justify-center"
       >
-        <CtaButton
-          onClick={() => {
-            console.log("clicked");
-          }}
-          title="Continue"
-        >
-          Let's Go!
-        </CtaButton>
-      </motion.div>
-
-      <div className="absolute top-[80%] flex w-full items-center justify-center">
         <SignIn />
-      </div>
+      </motion.div>
     </div>
   );
 };

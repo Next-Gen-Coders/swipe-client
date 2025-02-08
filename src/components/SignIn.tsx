@@ -1,5 +1,7 @@
 import { supabase } from "../../supabaseClient";
 
+import CtaButton from "./CtaButton";
+
 const SignIn = () => {
   const signUp = async () => {
     await supabase.auth.signInWithOAuth({
@@ -8,17 +10,12 @@ const SignIn = () => {
   };
 
   return (
-    <button
+    <CtaButton
       onClick={signUp}
-      className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors shadow-sm"
+      title="Sign In"
     >
-      <img 
-        src="https://www.google.com/favicon.ico" 
-        alt="Google" 
-        className="w-5 h-5"
-      />
-      Sign in with Google
-    </button>
+      Let's Go!
+    </CtaButton>
   );
 };
 
