@@ -10,11 +10,13 @@ const SignIn = () => {
   };
 
   return (
+    <div>
     <CtaButton
       onClick={signUp}
     >
-      Let's Go!
+      Continue with with Google
     </CtaButton>
+    </div>
   );
 };
 

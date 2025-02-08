@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router-dom";
+ import { useNavigate, useLocation } from "react-router-dom";
 import { Mic, MicOff } from 'lucide-react';
 import { AnimatePresence, motion } from "motion/react";
 import AiChat from "./AiChat/AiChat";

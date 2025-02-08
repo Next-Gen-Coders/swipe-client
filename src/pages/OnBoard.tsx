@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import IntroCard from "@/components/IntroCard";
-import { easeInOut, motion } from "motion/react"
+import { easeInOut, motion, AnimatePresence } from "motion/react"
 
 
 import ethereum from "@/assets/coins/ethereum.svg"
@@ -11,22 +11,20 @@ import SignIn from "@/components/SignIn";
 const OnBoard = () => {
   const [startSecondAnimation, setStartSecondAnimation] = useState(false);
   const [hideCard, setHideCard] = useState(false);
+  const [hideRed, setHideRed] = useState(false);
+  const [hideGreen, setHideGreen] = useState(false);
 
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setStartSecondAnimation(true);
-    }, 1200);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setHideCard(true);
-    }, 3100);
-
-    return () => clearTimeout(timer);
+    const timers = [
+      setTimeout(() => setStartSecondAnimation(true), 1200),
+      setTimeout(() => setHideCard(true), 3100),
+      setTimeout(() => setHideRed(true), 1100),
+      setTimeout(() => setHideGreen(true), 2300),
+    ];
+  
+    return () => timers.forEach(clearTimeout);
   }, []);
 
   return (
@@ -52,7 +50,23 @@ const OnBoard = () => {
         )
       }
 
-      <div className="h-full w-full flex flex-col justify-center items-center py-[30%]">
+
+        {
+          !hideRed && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 0.3 }} exit={{ opacity: 0 }} transition={{ duration: 0.1, delay: 1 }} className="w-1/5 absolute top-0 left-0 h-full bg-gradient-to-r from-red-600 to-transparent">
+            </motion.div>
+          )
+        }
+
+        {
+          !hideGreen && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 0.3 }} exit={{ opacity: 0 }} transition={{ duration: 0.1, delay: 2.1 }} className="w-1/5 absolute top-0 right-0 h-full bg-gradient-to-r from-transparent to-green-600">
+
+            </motion.div>
+          )
+        }
+
+      <div className="h-full w-full flex flex-col items-center justify-center ">
         <motion.img
           src={swipe}
           alt="swipe"

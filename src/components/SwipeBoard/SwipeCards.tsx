@@ -38,20 +38,23 @@ const cardData = [
 ];
 
 
-const Card = ({ id, url, setCards, cards, setIsDragging, setShowMoreInfo }: { id: number, url: string, setCards: any, cards: any, setIsDragging: any, setShowMoreInfo: any }) => {
+const Card = ({ id, url, setCards, cards, setIsDragging, setShowMoreInfo, setDragSide }: { id: number, url: string, setCards: any, cards: any, setIsDragging: any, setShowMoreInfo: any, setDragSide: any }) => {
     const x = useMotionValue(0);
     const y = useMotionValue(0);
 
     const rotateRaw = useTransform(x, [-150, 150], [-18, 18]);
-    const opacity = useTransform(x, [-150, 0, 150], [0, 1, 0]);
+
 
     const isFront = id === cards[cards.length - 1].id;
+
+    const opacity = useTransform(x, [-150, 0, 150], [0, 1, 0]);
 
     const rotate = useTransform(() => {
         const offset = isFront ? 1 : id % 2 ? 4 : -4;
 
         return `${rotateRaw.get() + offset}deg`;
     });
+
 
     const handleDragEnd = () => {
         setIsDragging(false);
@@ -72,8 +75,7 @@ const Card = ({ id, url, setCards, cards, setIsDragging, setShowMoreInfo }: { id
 
     return (
         <motion.div
-
-            className="h-[60%] w-[80%] origin-bottom rounded-lg bg-white hover:cursor-grab active:cursor-grabbing overflow-hidden flex justify-center items-center"
+            className={`w-[80%] md:w-[70%] aspect-[7/8] origin-bottom rounded-3xl bg-white hover:cursor-grab active:cursor-grabbing overflow-hidden flex justify-center items-center  border border-black/10  shadow-black ${isFront ? 'shadow-xl rotate-0' : '!opacity-50 '}`}
             style={{
                 gridRow: 1,
                 gridColumn: 1,
@@ -82,9 +84,6 @@ const Card = ({ id, url, setCards, cards, setIsDragging, setShowMoreInfo }: { id
                 opacity,
                 rotate,
                 transition: "0.125s transform",
-                boxShadow: isFront
-                    ? "0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.5)"
-                    : undefined,
             }}
             animate={{
                 scale: isFront ? 1 : 0.98,
@@ -98,9 +97,21 @@ const Card = ({ id, url, setCards, cards, setIsDragging, setShowMoreInfo }: { id
             }}
             onDragStart={() => setIsDragging(true)}
             onDragEnd={handleDragEnd}
+            onDrag={(e, info) => {
+                // Convert x movement to degrees - assuming you have a function or value that does this
+                const deg =info.offset.x
+                
+                if (deg < 2) {
+                    setDragSide("left");
+                } else {
+                    setDragSide("right");
+                }
+            }}
+
         >
             <img src={url}
                 alt="Placeholder alt"
+
                 className="h-full w-full object-cover"
             />
         </motion.div>
@@ -108,7 +119,7 @@ const Card = ({ id, url, setCards, cards, setIsDragging, setShowMoreInfo }: { id
 };
 
 
-const SwipeCards = ({ setIsDragging, setShowMoreInfo }: { setIsDragging: (isDragging: boolean) => void, setShowMoreInfo: (showMoreInfo: boolean) => void }) => {
+const SwipeCards = ({ setIsDragging, setShowMoreInfo, setDragSide }: { setIsDragging: (isDragging: boolean) => void, setShowMoreInfo: (showMoreInfo: boolean) => void, setDragSide: (dragSide: "left" | "right") => void }) => {
     const [cards, setCards] = useState(cardData);
 
     return (
@@ -118,7 +129,7 @@ const SwipeCards = ({ setIsDragging, setShowMoreInfo }: { setIsDragging: (isDrag
             >
                 {cards.map((card) => {
                     return (
-                        <Card key={card.id} cards={cards} setCards={setCards} {...card} setIsDragging={setIsDragging} setShowMoreInfo={setShowMoreInfo} />
+                        <Card key={card.id} cards={cards} setCards={setCards} {...card} setIsDragging={setIsDragging} setShowMoreInfo={setShowMoreInfo} setDragSide={setDragSide} />
                     );
                 })}
             </div>
