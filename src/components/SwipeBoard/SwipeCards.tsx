@@ -55,26 +55,25 @@ const Card = ({ id, url, setCards, cards, setIsDragging, setShowMoreInfo }: { id
 
     const handleDragEnd = () => {
         setIsDragging(false);
-        if (Math.abs(y.get()) > 100 && (y.get()) < 0) {
+        if (Math.abs(y.get()) > 70 && (y.get()) < 0) {
             setShowMoreInfo(true);
         }
 
-        if ((x.get()) > 100) {
+        if ((x.get()) > 60) {
             console.log("right");
             setCards((pv: any) => pv.filter((v: any) => v.id !== id));
         }
 
-        if ((x.get()) < -100) {
+        if ((x.get()) < -60) {
             console.log("left");
             setCards((pv: any) => pv.filter((v: any) => v.id !== id));
         }
     };
 
     return (
-        <motion.img
-            src={url}
-            alt="Placeholder alt"
-            className="h-[50%] w-[80%] origin-bottom rounded-lg bg-white object-cover hover:cursor-grab active:cursor-grabbing"
+        <motion.div
+
+            className="h-[60%] w-[80%] origin-bottom rounded-lg bg-white hover:cursor-grab active:cursor-grabbing overflow-hidden flex justify-center items-center"
             style={{
                 gridRow: 1,
                 gridColumn: 1,
@@ -99,24 +98,31 @@ const Card = ({ id, url, setCards, cards, setIsDragging, setShowMoreInfo }: { id
             }}
             onDragStart={() => setIsDragging(true)}
             onDragEnd={handleDragEnd}
-        />
+        >
+            <img src={url}
+                alt="Placeholder alt"
+                className="h-full w-full object-cover"
+            />
+        </motion.div>
     );
 };
 
 
-const SwipeCards = ({ setIsDragging, setShowMoreInfo }: { setIsDragging: React.Dispatch<React.SetStateAction<boolean>>, setShowMoreInfo: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const SwipeCards = ({ setIsDragging, setShowMoreInfo }: { setIsDragging: (isDragging: boolean) => void, setShowMoreInfo: (showMoreInfo: boolean) => void }) => {
     const [cards, setCards] = useState(cardData);
 
     return (
-        <div
-            className="grid h-full w-full place-items-center"
-        >
-            {cards.map((card) => {
-                return (
-                    <Card key={card.id} cards={cards} setCards={setCards} {...card} setIsDragging={setIsDragging} setShowMoreInfo={setShowMoreInfo} />
-                );
-            })}
-        </div>
+        <>
+            <div
+                className="grid h-full w-full place-items-center"
+            >
+                {cards.map((card) => {
+                    return (
+                        <Card key={card.id} cards={cards} setCards={setCards} {...card} setIsDragging={setIsDragging} setShowMoreInfo={setShowMoreInfo} />
+                    );
+                })}
+            </div>
+        </>
     );
 };
 
