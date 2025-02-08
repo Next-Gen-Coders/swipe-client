@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 
-const AiChat = ({ isUnmute, amplitude, setIsChatOpen, setIsUnmute }: { isUnmute: boolean, amplitude: number, setIsChatOpen: (open: boolean) => void, setIsUnmute: (unmute: boolean) => void }) => {
+const AiChat = ({ isUnmute, amplitude }: { isUnmute: boolean, amplitude: number, setIsChatOpen: (open: boolean) => void, setIsUnmute: (unmute: boolean) => void }) => {
     return (
         <>
             Chat With AI ✨

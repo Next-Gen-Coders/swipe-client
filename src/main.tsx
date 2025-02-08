@@ -17,8 +17,8 @@ createRoot(document.getElementById("root")!).render(
       <Router>
         <App />
       </Router>
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       {/* Dev tools for debugging */}
+      {process.env.NODE_ENV === 'development' && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   </StrictMode>,
 );

@@ -9,9 +9,9 @@ const AppRoutes = () => {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      navigate("/login");
+      navigate("/onboard");
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, navigate]);
 
   return isLoggedIn ? <PrivateRoutes /> : <PublicRoutes />;
 };
