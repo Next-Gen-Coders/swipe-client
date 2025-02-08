@@ -1,18 +1,16 @@
-import { useNavigate } from "react-router"
-import Back from "@/assets/back.svg"
+import { useNavigate } from "react-router";
+import Back from "@/assets/back.svg";
 
 const Portfolio = () => {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    return (
-        <div className="flex h-full w-full bg-[#020617] relative text-white">
-            <div className="absolute top-4 left-3"
-                onClick={() => navigate("/")}
-            >
-                <img src={Back} alt="back" className="h-8" />
-            </div>
-        </div>
-    )
-}
+  return (
+    <div className="relative flex h-full w-full bg-[#020617] text-white">
+      <div className="absolute left-3 top-4" onClick={() => navigate("/")}>
+        <img src={Back} alt="back" className="h-8" />
+      </div>
+    </div>
+  );
+};
 
-export default Portfolio
+export default Portfolio;

@@ -1,9 +1,5 @@
 const PublicLayout = ({ children }: { children: React.ReactNode }) => {
-    return (
-        <div className="flex flex-col h-full w-full relative">
-            {children}
-        </div>
-    )
-}
+  return <div className="relative flex h-full w-full flex-col">{children}</div>;
+};
 
-export default PublicLayout
+export default PublicLayout;

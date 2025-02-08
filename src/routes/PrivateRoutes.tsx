@@ -4,7 +4,6 @@ import PrivateLayout from "@/layouts/PrivateLayout";
 import Transactions from "@/pages/Transactions";
 import Portfolio from "@/pages/Portfolio";
 
-
 const PrivateRoutes = () => {
   return (
     <PrivateLayout>

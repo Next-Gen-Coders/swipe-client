@@ -6,7 +6,7 @@ import App from "./App";
 import "./index.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import queryClient from "./lib/config/queryClient";
-import WebApp from '@twa-dev/sdk'
+import WebApp from "@twa-dev/sdk";
 
 WebApp.ready();
 
@@ -18,7 +18,9 @@ createRoot(document.getElementById("root")!).render(
         <App />
       </Router>
       {/* Dev tools for debugging */}
-      {process.env.NODE_ENV === 'development' && <ReactQueryDevtools initialIsOpen={false} />}
+      {process.env.NODE_ENV === "development" && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
     </QueryClientProvider>
   </StrictMode>,
 );
