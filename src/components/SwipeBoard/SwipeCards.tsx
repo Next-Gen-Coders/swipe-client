@@ -81,9 +81,8 @@ const Card = ({
 
   return (
     <motion.div
-      className={`flex aspect-[7/8] w-[80%] origin-bottom flex-col overflow-hidden rounded-3xl border border-black/10 bg-white pb-3 shadow-black hover:cursor-grab active:cursor-grabbing md:w-[70%] ${
-        isFront ? "rotate-0 shadow-xl" : "!opacity-50"
-      }`}
+      className={`flex aspect-[7/8] w-[80%] origin-bottom flex-col overflow-hidden rounded-3xl border border-black/10 bg-white pb-3 shadow-black hover:cursor-grab active:cursor-grabbing md:w-[70%] ${isFront ? "rotate-0 shadow-xl" : "!opacity-50"
+        }`}
       style={{
         gridRow: 1,
         gridColumn: 1,
@@ -125,11 +124,10 @@ const Card = ({
         />
         {/* Position Badge */}
         <div
-          className={`absolute right-4 top-4 rounded-full px-3 py-1 text-sm font-semibold ${
-            position_type === "long"
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
-          }`}
+          className={`absolute right-4 top-4 rounded-full px-3 py-1 text-sm font-semibold ${position_type === "long"
+            ? "bg-green-100 text-green-800"
+            : "bg-red-100 text-red-800"
+            }`}
         >
           {position_type.toUpperCase()}
         </div>
@@ -187,17 +185,35 @@ const SwipeCards = ({
 }: SwipeCardsProps) => {
   const { session } = useSessionStore();
   const { cards, setCards, markAsSeen } = useSwipeCardStore();
-  const { data, isLoading } = useGetSwipeCards(session?.user?.email || "");
+  const { isLoading, refetch } = useGetSwipeCards(session?.user?.email || "", {
+    enabled: false, // Disable automatic fetching
+  });
 
-  useEffect(() => {
-    if (data?.coins) {
-      const uniqueCards = data.coins.filter(
+  // Function to fetch new cards
+  const fetchNewCards = async () => {
+    const result = await refetch();
+    if (result.data?.coins) {
+      const uniqueCards = result.data.coins.filter(
         (card, index, self) =>
           index === self.findIndex((c) => c.id === card.id),
       ) as unknown as SwipeCard[];
       setCards(uniqueCards);
     }
-  }, [data, setCards]);
+  };
+
+  // Initial load - fetch cards only if store is empty
+  useEffect(() => {
+    if (!cards?.length) {
+      fetchNewCards();
+    }
+  }, []);
+
+  // Watch for low card count and fetch more
+  useEffect(() => {
+    if (cards?.length <= 5) {
+      fetchNewCards();
+    }
+  }, [cards?.length]);
 
   if (isLoading) {
     return (

@@ -1,7 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../lib/config/axiosClient";
 
-export const useGetSwipeCards = (email: string) => {
+export const useGetSwipeCards = (
+  email: string,
+  options?: { enabled: boolean },
+) => {
   return useQuery({
     queryKey: ["swipe-cards", email],
     queryFn: async () => {
@@ -10,6 +13,6 @@ export const useGetSwipeCards = (email: string) => {
       const { data } = await apiClient.post("/user/get-swipe-cards", { email });
       return data.data;
     },
-    enabled: !!email,
+    enabled: options?.enabled ?? !!email, // Enable by default if no option is provided
   });
 };

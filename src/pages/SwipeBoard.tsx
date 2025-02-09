@@ -60,7 +60,7 @@ const SwipeBoard = () => {
               animate={{ opacity: 1, top: "50%" }}
               exit={{ opacity: 0, top: "30%" }}
               transition={{ duration: 0.5 }}
-              className="absolute left-1/2 top-1/2 z-30 h-[80%] w-[90%] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-3xl bg-white p-6 pt-10"
+              className="absolute left-1/2 top-1/2 z-30 h-[80%] max-h-[95%] w-[90%] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-3xl bg-white p-6 pt-10"
             >
               <div
                 className="absolute right-5 top-5 flex cursor-pointer items-center justify-center"
@@ -91,11 +91,10 @@ const SwipeBoard = () => {
                     </p>
                   </div>
                   <div
-                    className={`ml-auto rounded-full px-4 py-2 text-sm font-semibold ${
-                      currentCard?.position_type === "long"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
+                    className={`ml-auto rounded-full px-4 py-2 text-sm font-semibold ${currentCard?.position_type === "long"
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                      }`}
                   >
                     {currentCard?.position_type.toUpperCase()}
                   </div>
@@ -185,11 +184,10 @@ const SwipeBoard = () => {
                     <div className="mt-2 flex items-center text-sm text-gray-500">
                       <span>24h Change:</span>
                       <span
-                        className={`ml-2 font-semibold ${
-                          (currentCard?.price_change_24h || 0) > 0
-                            ? "text-green-600"
-                            : "text-red-600"
-                        }`}
+                        className={`ml-2 font-semibold ${(currentCard?.price_change_24h || 0) > 0
+                          ? "text-green-600"
+                          : "text-red-600"
+                          }`}
                       >
                         {currentCard?.price_change_24h.toFixed(2)}%
                       </span>
