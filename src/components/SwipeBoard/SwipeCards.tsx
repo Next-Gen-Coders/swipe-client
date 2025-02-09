@@ -1,59 +1,51 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
-import { motion, useMotionValue, useTransform } from "motion/react";
+import { useEffect } from "react";
+import { motion, useMotionValue, useTransform } from "framer-motion";
+import { useSwipeCardStore } from "@/stores/swipeCardStore";
+import { useGetSwipeCards } from "@/hooks/apis/useGetSwipeCards";
+import BarLoader from "../loader";
+import { useSessionStore } from "@/stores/sessionStore";
+import { SwipeCard } from "@/utils/Types";
 
-const cardData = [
-  {
-    id: 1,
-    url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: 2,
-    url: "https://images.unsplash.com/photo-1512374382149-233c42b6a83b?q=80&w=2235&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: 3,
-    url: "https://images.unsplash.com/photo-1539185441755-769473a23570?q=80&w=2342&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: 4,
-    url: "https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=2224&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: 5,
-    url: "https://images.unsplash.com/photo-1516478177764-9fe5bd7e9717?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: 6,
-    url: "https://images.unsplash.com/photo-1570464197285-9949814674a7?q=80&w=2273&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: 7,
-    url: "https://images.unsplash.com/photo-1578608712688-36b5be8823dc?q=80&w=2187&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: 8,
-    url: "https://images.unsplash.com/photo-1505784045224-1247b2b29cf3?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-];
+
+interface CardProps {
+  id: string;
+  url: string;
+  name: string;
+  symbol: string;
+  entry_price: number;
+  take_profit: number;
+  stop_loss: number;
+  position_type: 'long' | 'short';
+  setCards: (cards: SwipeCard[]) => void;
+  cards: SwipeCard[];
+  setIsDragging: (isDragging: boolean) => void;
+  setShowMoreInfo: (showMoreInfo: boolean) => void;
+  setDragSide: (dragSide: "left" | "right") => void;
+  image: {
+    large: string;
+    small: string;
+    thumb: string;
+  };
+  onCardView: (card: SwipeCard | null) => void;
+}
 
 const Card = ({
   id,
   url,
+  name,
+  symbol,
+  entry_price,
+  take_profit,
+  stop_loss,
+  position_type,
   setCards,
   cards,
   setIsDragging,
   setShowMoreInfo,
   setDragSide,
-}: {
-  id: number;
-  url: string;
-  setCards: any;
-  cards: any;
-  setIsDragging: any;
-  setShowMoreInfo: any;
-  setDragSide: any;
-}) => {
+  onCardView,
+}: CardProps) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -64,7 +56,7 @@ const Card = ({
   const opacity = useTransform(x, [-150, 0, 150], [0, 1, 0]);
 
   const rotate = useTransform(() => {
-    const offset = isFront ? 1 : id % 2 ? 4 : -4;
+    const offset = isFront ? 1 : parseInt(id) % 2 ? 4 : -4;
 
     return `${rotateRaw.get() + offset}deg`;
   });
@@ -73,22 +65,24 @@ const Card = ({
     setIsDragging(false);
     if (Math.abs(y.get()) > 70 && y.get() < 0) {
       setShowMoreInfo(true);
+      onCardView(cards.find(c => c.id === id) || null);
     }
 
-    if (x.get() > 60) {
-      console.log("right");
-      setCards((pv: any) => pv.filter((v: any) => v.id !== id));
+    if (x.get() > 60 || x.get() < -60) {
+      // Filter out the current card and maintain the array structure
+      const newCards = cards.filter((card: any) => card.id !== id);
+      setCards(newCards);
     }
 
-    if (x.get() < -60) {
-      console.log("left");
-      setCards((pv: any) => pv.filter((v: any) => v.id !== id));
-    }
+    // Reset position
+    x.set(0);
+    y.set(0);
   };
 
   return (
     <motion.div
-      className={`flex aspect-[7/8] w-[80%] origin-bottom items-center justify-center overflow-hidden rounded-3xl border border-black/10 bg-white shadow-black hover:cursor-grab active:cursor-grabbing md:w-[70%] ${isFront ? "rotate-0 shadow-xl" : "!opacity-50"}`}
+      className={`flex aspect-[7/8] w-[80%] origin-bottom flex-col overflow-hidden rounded-3xl border border-black/10 bg-white shadow-black hover:cursor-grab active:cursor-grabbing md:w-[70%] pb-3 ${isFront ? "rotate-0 shadow-xl" : "!opacity-50"
+        }`}
       style={{
         gridRow: 1,
         gridColumn: 1,
@@ -121,44 +115,125 @@ const Card = ({
         }
       }}
     >
-      <img
-        src={url}
-        alt="Placeholder alt"
-        className="h-full w-full object-cover"
-      />
+      {/* Image Container - 60% height */}
+      <div className="relative h-[60%] w-full">
+        <img
+          src={url}
+          alt={`${name} image`}
+          className="h-full w-full object-cover"
+        />
+        {/* Position Badge */}
+        <div
+          className={`absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-semibold ${position_type === 'long'
+            ? 'bg-green-100 text-green-800'
+            : 'bg-red-100 text-red-800'
+            }`}
+        >
+          {position_type.toUpperCase()}
+        </div>
+      </div>
+
+      {/* Info Container - 40% height */}
+      <div className="flex h-[40%] flex-col justify-between p-4">
+        {/* Coin Info */}
+        <div>
+          <h2 className="text-xl font-bold text-gray-900">{name}</h2>
+          <p className="text-sm text-gray-500 uppercase">{symbol}</p>
+        </div>
+
+        {/* Price Info */}
+        <div className="space-y-2">
+          {/* Entry Price */}
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-500">Entry</span>
+            <span className="font-medium">${entry_price.toFixed(6)}</span>
+          </div>
+
+          {/* Take Profit */}
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-500">Take Profit</span>
+            <span className="font-medium text-green-600">
+              ${take_profit.toFixed(6)}
+            </span>
+          </div>
+
+          {/* Stop Loss */}
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-500">Stop Loss</span>
+            <span className="font-medium text-red-600">
+              ${stop_loss.toFixed(6)}
+            </span>
+          </div>
+        </div>
+      </div>
     </motion.div>
   );
 };
+
+interface SwipeCardsProps {
+  setIsDragging: (isDragging: boolean) => void;
+  setShowMoreInfo: (showMoreInfo: boolean) => void;
+  setDragSide: (dragSide: "left" | "right") => void;
+  onCardView: (card: SwipeCard | null) => void;
+}
 
 const SwipeCards = ({
   setIsDragging,
   setShowMoreInfo,
   setDragSide,
-}: {
-  setIsDragging: (isDragging: boolean) => void;
-  setShowMoreInfo: (showMoreInfo: boolean) => void;
-  setDragSide: (dragSide: "left" | "right") => void;
-}) => {
-  const [cards, setCards] = useState(cardData);
+  onCardView,
+}: SwipeCardsProps) => {
+  const { session } = useSessionStore();
+  const { cards, setCards, markAsSeen } = useSwipeCardStore();
+  const { data, isLoading } = useGetSwipeCards(session?.user?.email || "");
+
+  useEffect(() => {
+    if (data?.coins) { // Check for data.coins instead of data
+      // Filter out duplicates based on ID
+      const uniqueCards = data.coins.filter((card, index, self) =>
+        index === self.findIndex((c) => c.id === card.id)
+      );
+      setCards(uniqueCards);
+    }
+  }, [data, setCards]);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <div>
+          <BarLoader />
+        </div>
+      </div>
+    );
+  }
+
+  if (!cards?.length) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <p className="text-xl text-gray-500">No more cards to show</p>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div className="grid h-full w-full place-items-center">
-        {cards.map((card) => {
-          return (
-            <Card
-              key={card.id}
-              cards={cards}
-              setCards={setCards}
-              {...card}
-              setIsDragging={setIsDragging}
-              setShowMoreInfo={setShowMoreInfo}
-              setDragSide={setDragSide}
-            />
-          );
-        })}
-      </div>
-    </>
+    <div className="grid h-full w-full place-items-center">
+      {cards.map((card, index) => (
+        <Card
+          key={`${card.id}-${index}`}  // Add index to make the key unique
+          cards={cards}
+          setCards={(newCards: any) => {
+            markAsSeen(card.id);
+            setCards(newCards);
+          }}
+          {...card}
+          url={card.image.large}
+          setIsDragging={setIsDragging}
+          setShowMoreInfo={setShowMoreInfo}
+          setDragSide={setDragSide}
+          onCardView={onCardView}
+        />
+      ))}
+    </div>
   );
 };
 
