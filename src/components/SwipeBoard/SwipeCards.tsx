@@ -7,7 +7,6 @@ import BarLoader from "../loader";
 import { useSessionStore } from "@/stores/sessionStore";
 import { SwipeCard } from "@/utils/Types";
 
-
 interface CardProps {
   id: string;
   url: string;
@@ -16,12 +15,13 @@ interface CardProps {
   entry_price: number;
   take_profit: number;
   stop_loss: number;
-  position_type: 'long' | 'short';
+  position_type: "long" | "short";
   setCards: (cards: SwipeCard[]) => void;
-  cards: SwipeCard[];
+  cards: any;
   setIsDragging: (isDragging: boolean) => void;
   setShowMoreInfo: (showMoreInfo: boolean) => void;
   setDragSide: (dragSide: "left" | "right") => void;
+
   image: {
     large: string;
     small: string;
@@ -65,7 +65,7 @@ const Card = ({
     setIsDragging(false);
     if (Math.abs(y.get()) > 70 && y.get() < 0) {
       setShowMoreInfo(true);
-      onCardView(cards.find(c => c.id === id) || null);
+      onCardView(cards.find((c) => c.id === id) || null);
     }
 
     if (x.get() > 60 || x.get() < -60) {
@@ -81,8 +81,9 @@ const Card = ({
 
   return (
     <motion.div
-      className={`flex aspect-[7/8] w-[80%] origin-bottom flex-col overflow-hidden rounded-3xl border border-black/10 bg-white shadow-black hover:cursor-grab active:cursor-grabbing md:w-[70%] pb-3 ${isFront ? "rotate-0 shadow-xl" : "!opacity-50"
-        }`}
+      className={`flex aspect-[7/8] w-[80%] origin-bottom flex-col overflow-hidden rounded-3xl border border-black/10 bg-white pb-3 shadow-black hover:cursor-grab active:cursor-grabbing md:w-[70%] ${
+        isFront ? "rotate-0 shadow-xl" : "!opacity-50"
+      }`}
       style={{
         gridRow: 1,
         gridColumn: 1,
@@ -124,10 +125,11 @@ const Card = ({
         />
         {/* Position Badge */}
         <div
-          className={`absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-semibold ${position_type === 'long'
-            ? 'bg-green-100 text-green-800'
-            : 'bg-red-100 text-red-800'
-            }`}
+          className={`absolute right-4 top-4 rounded-full px-3 py-1 text-sm font-semibold ${
+            position_type === "long"
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
+          }`}
         >
           {position_type.toUpperCase()}
         </div>
@@ -138,19 +140,19 @@ const Card = ({
         {/* Coin Info */}
         <div>
           <h2 className="text-xl font-bold text-gray-900">{name}</h2>
-          <p className="text-sm text-gray-500 uppercase">{symbol}</p>
+          <p className="text-sm uppercase text-gray-500">{symbol}</p>
         </div>
 
         {/* Price Info */}
         <div className="space-y-2">
           {/* Entry Price */}
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <span className="text-sm text-gray-500">Entry</span>
             <span className="font-medium">${entry_price.toFixed(6)}</span>
           </div>
 
           {/* Take Profit */}
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <span className="text-sm text-gray-500">Take Profit</span>
             <span className="font-medium text-green-600">
               ${take_profit.toFixed(6)}
@@ -158,7 +160,7 @@ const Card = ({
           </div>
 
           {/* Stop Loss */}
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <span className="text-sm text-gray-500">Stop Loss</span>
             <span className="font-medium text-red-600">
               ${stop_loss.toFixed(6)}
@@ -188,11 +190,11 @@ const SwipeCards = ({
   const { data, isLoading } = useGetSwipeCards(session?.user?.email || "");
 
   useEffect(() => {
-    if (data?.coins) { // Check for data.coins instead of data
-      // Filter out duplicates based on ID
-      const uniqueCards = data.coins.filter((card, index, self) =>
-        index === self.findIndex((c) => c.id === card.id)
-      );
+    if (data?.coins) {
+      const uniqueCards = data.coins.filter(
+        (card, index, self) =>
+          index === self.findIndex((c) => c.id === card.id),
+      ) as unknown as SwipeCard[];
       setCards(uniqueCards);
     }
   }, [data, setCards]);
@@ -219,13 +221,16 @@ const SwipeCards = ({
     <div className="grid h-full w-full place-items-center">
       {cards.map((card, index) => (
         <Card
-          key={`${card.id}-${index}`}  // Add index to make the key unique
-          cards={cards}
-          setCards={(newCards: any) => {
+          key={`${card.id}-${index}`}
+          cards={cards as SwipeCard[]}
+          setCards={(newCards: SwipeCard[]) => {
             markAsSeen(card.id);
             setCards(newCards);
           }}
-          {...card}
+          {...{
+            ...card,
+            position_type: card.position_type as "long" | "short",
+          }}
           url={card.image.large}
           setIsDragging={setIsDragging}
           setShowMoreInfo={setShowMoreInfo}
