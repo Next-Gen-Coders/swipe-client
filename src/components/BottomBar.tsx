@@ -35,9 +35,9 @@ const BottomBar = () => {
       }}
       className={`transform rounded-xl p-3 transition-all duration-300 active:scale-95 active:border-white/30 active:bg-white/20 ${
         location.pathname === to
-          ? `border-white/30 bg-white/20 shadow-[0_0_15px_-3px_rgba(59,130,246,0.3),0_0_25px_-5px_rgba(147,51,234,0.2)] backdrop-blur-md before:absolute before:inset-0 before:-z-10 before:bg-gradient-to-r before:from-blue-400/20 before:via-purple-400/20 before:to-pink-400/20 before:blur-xl`
+          ? `border-white/30 bg-white/20 backdrop-blur-md`
           : ""
-      } focus:outline-none focus:ring-2 focus:ring-blue-300`}
+      } focus:outline-none focus:ring-2 focus:ring-violet-50`}
       aria-label={alt}
     >
       <img src={icon} alt={alt} className="h-8 opacity-90" />
@@ -102,7 +102,7 @@ const BottomBar = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: "100%" }}
               transition={{ duration: 0.5 }}
-              className="fixed bottom-0 z-10 flex min-h-[500px] w-[99%] max-w-[768px] items-center justify-center rounded-t-3xl border border-blue-400/50 bg-[#020617]/80 bg-gradient-to-b from-transparent to-[#020617]/90 text-white shadow-lg shadow-blue-400/20 backdrop-blur-md"
+              className="absolute bottom-28 left-4 z-10 flex min-h-[50%] w-[calc(100%-2rem)] items-center justify-center rounded-b-3xl rounded-t-3xl bg-violet-800 text-white"
             >
               <AiChat
                 isUnmute={isUnmute}
@@ -112,7 +112,7 @@ const BottomBar = () => {
               />
             </motion.div>
             <div
-              className="fixed inset-0 z-[5] bg-black bg-opacity-15 filter backdrop-blur-[7px]"
+              className="fixed inset-0 z-[5] bg-black bg-opacity-15 backdrop-blur-sm duration-200"
               onClick={() => {
                 setIsChatOpen(false);
                 setIsUnmute(false);
@@ -123,7 +123,7 @@ const BottomBar = () => {
       </AnimatePresence>
 
       <div
-        className={`absolute bottom-5 left-1/2 m-auto w-[95%] -translate-x-1/2 rounded-3xl ${isChatOpen ? "" : "border-t border-white/10 bg-[#0b174d]/80 shadow-lg shadow-black/50 backdrop-blur-lg"} z-20 flex items-center justify-around py-2`}
+        className={`absolute bottom-5 left-1/2 z-20 m-auto flex w-[95%] -translate-x-1/2 items-center justify-around rounded-3xl bg-violet-800 py-2 shadow-lg shadow-black/50`}
       >
         <NavButton to="/transactions" icon={Transactions} alt="Transactions" />
 
@@ -133,12 +133,12 @@ const BottomBar = () => {
           onClick={() => handleAiChatClick()}
         >
           <div
-            className={`absolute bottom-0 left-1/2 -translate-x-1/2 ${isChatOpen ? "w-20" : "w-16"} flex aspect-square items-center justify-center rounded-full border-[3px] backdrop-blur-md ${isUnmute ? "border-blue-300 bg-blue-400/10" : "border-white/30 bg-white/10"} transition-all duration-300 hover:bg-white/20`}
+            className={`absolute bottom-0 left-1/2 -translate-x-1/2 ${isChatOpen ? "w-20" : "w-16"} flex aspect-square items-center justify-center rounded-full border-[3px] backdrop-blur-md ${isUnmute ? "border-violet-100 bg-blue-400/10" : "border-white/30 bg-white/10"} transition-all duration-300 hover:bg-white/20`}
           >
             <div className="flex aspect-square h-[90%] items-center justify-center rounded-full bg-white/10 shadow-inner shadow-white/10 backdrop-blur-sm transition-all duration-300 hover:bg-white/20">
               {!isChatOpen || isUnmute ? (
                 <Mic
-                  className={`h-7 w-7 ${isUnmute ? "text-blue-300" : "text-white/90"}`}
+                  className={`h-7 w-7 ${isUnmute ? "text-violet-100" : "text-white/90"}`}
                 />
               ) : (
                 <MicOff className="h-7 w-7 text-white/90" />
