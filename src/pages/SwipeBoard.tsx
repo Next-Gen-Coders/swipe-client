@@ -1,7 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { useUserSettingsStore } from "@/stores/userSettingsStore";
 
 import SwipeCards from "@/components/SwipeBoard/SwipeCards";
+import OnboardingSliders from "@/components/SwipeBoard/OnboardingSliders";
 
 import SwipeLogo from "@/assets/swipe_white_bg.svg";
 import SwipeUp from "@/assets/swipeup.svg";
@@ -12,6 +14,7 @@ const SwipeBoard = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [showMoreInfo, setShowMoreInfo] = useState(false);
     const [dragSide, setDragSide] = useState<"left" | "right">("left");
+    const { onboardingCompleted, setOnboardingCompleted } = useUserSettingsStore();
 
     return (
         <div className="flex h-full w-full overflow-hidden relative bg-violet-100">
@@ -97,7 +100,15 @@ const SwipeBoard = () => {
             <div className="absolute w-full flex pb-4 pl-4">
                 <img src={SwipeLogo} alt="Swipe Logo" className="h-24 " />
             </div>
-            <SwipeCards setIsDragging={setIsDragging} setShowMoreInfo={setShowMoreInfo} setDragSide={setDragSide} />
+            {
+                onboardingCompleted ? <SwipeCards setIsDragging={setIsDragging} setShowMoreInfo={setShowMoreInfo} setDragSide={setDragSide} />
+                    : (
+                        <div className="w-full h-full flex items-center justify-center">
+                            {/* Onboarding Questions */}
+                            <OnboardingSliders onComplete={() => setOnboardingCompleted(true)} />
+                        </div>
+                    )
+            }
         </div >
     )
 }
