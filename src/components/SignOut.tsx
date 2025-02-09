@@ -6,7 +6,7 @@ const SignOut = () => {
   return (
     <button
       onClick={signOut}
-      className="px-4 py-2 bg-red-50 text-red-600 rounded-md hover:bg-red-100 transition-colors duration-200"
+      className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-500 transition-colors duration-200 font-semibold"
     >
       Sign out
     </button>

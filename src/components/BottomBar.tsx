@@ -1,4 +1,4 @@
- import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Mic, MicOff } from 'lucide-react';
 import { AnimatePresence, motion } from "motion/react";
 import AiChat from "./AiChat/AiChat";
@@ -33,11 +33,7 @@ const BottomBar = () => {
                     bg-white/20 
                     border-white/30 
                     backdrop-blur-md 
-                    shadow-[0_0_15px_-3px_rgba(59,130,246,0.3),0_0_25px_-5px_rgba(147,51,234,0.2)]
-                    before:absolute before:inset-0 before:bg-gradient-to-r 
-                    before:from-blue-400/20 before:via-purple-400/20 before:to-pink-400/20 
-                    before:blur-xl before:-z-10
-                ` : ''}                focus:outline-none focus:ring-2 focus:ring-blue-300`}
+                ` : ''}                focus:outline-none focus:ring-2 focus:ring-violet-50`}
             aria-label={alt}
         >
             <img src={icon} alt={alt} className="h-8 opacity-90" />
@@ -102,17 +98,15 @@ const BottomBar = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: "100%" }}
                             transition={{ duration: 0.5 }}
-                            className="fixed flex justify-center items-center min-h-[500px] w-[99%] 
-                         bg-[#020617]/80 backdrop-blur-md
-                         border-blue-400/50 border rounded-t-3xl 
-                         text-white bottom-0 z-10
-                         shadow-lg shadow-blue-400/20
-                         bg-gradient-to-b from-transparent to-[#020617]/90 max-w-[768px]"
+                            className="absolute flex justify-center items-center min-h-[50%] w-[calc(100%-2rem)] left-4 
+                         bg-violet-800 
+                         rounded-t-3xl  rounded-b-3xl
+                         text-white bottom-28 z-10 "
                         >
                             <AiChat isUnmute={isUnmute} amplitude={amplitude} setIsChatOpen={setIsChatOpen} setIsUnmute={setIsUnmute} />
                         </motion.div>
                         <div
-                            className="fixed inset-0 z-[5] bg-black filter backdrop-blur-[7px] bg-opacity-15"
+                            className="fixed inset-0 z-[5] bg-black bg-opacity-15 backdrop-blur-sm duration-200"
                             onClick={() => {
                                 setIsChatOpen(false);
                                 setIsUnmute(false);
@@ -122,7 +116,7 @@ const BottomBar = () => {
                 )}
             </AnimatePresence>
 
-            <div className={`w-[95%] m-auto absolute left-1/2 -translate-x-1/2 bottom-5 rounded-3xl  ${isChatOpen ? '' : 'backdrop-blur-lg bg-[#0b174d]/80  border-t border-white/10 shadow-lg shadow-black/50'} flex justify-around items-center py-2 z-20`}>
+            <div className={`w-[95%] m-auto absolute left-1/2 -translate-x-1/2 bottom-5 rounded-3xl  bg-violet-800 shadow-lg shadow-black/50 flex justify-around items-center py-2 z-20`}>
 
                 <NavButton to="/transactions" icon={Transactions} alt="Transactions" />
 
@@ -136,14 +130,14 @@ const BottomBar = () => {
                     <div className={`absolute -translate-x-1/2 left-1/2 bottom-0 ${isChatOpen ? "w-20" : "w-16"} aspect-square 
                         flex justify-center items-center rounded-full 
                         border-[3px] backdrop-blur-md 
-                        ${isUnmute ? 'border-blue-300 bg-blue-400/10' : 'border-white/30 bg-white/10'} 
+                        ${isUnmute ? 'border-violet-100 bg-blue-400/10' : 'border-white/30 bg-white/10'} 
                         transition-all duration-300 hover:bg-white/20`}>
                         <div className="bg-white/10 h-[90%] flex justify-center items-center 
                             aspect-square rounded-full hover:bg-white/20 
                             backdrop-blur-sm transition-all duration-300
                             shadow-inner shadow-white/10">
                             {!isChatOpen || isUnmute ? (
-                                <Mic className={`h-7 w-7 ${isUnmute ? 'text-blue-300' : 'text-white/90'}`} />
+                                <Mic className={`h-7 w-7 ${isUnmute ? 'text-violet-100' : 'text-white/90'}`} />
                             ) : (
                                 <MicOff className="h-7 w-7 text-white/90" />
                             )}

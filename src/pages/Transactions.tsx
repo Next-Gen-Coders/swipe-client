@@ -5,7 +5,7 @@ const Transactions = () => {
     const navigate = useNavigate()
 
     return (
-        <div className="flex h-full w-full bg-[#020617] relative text-white">
+        <div className="flex h-full w-full bg-violet-100 relative">
             <div className="absolute top-4 left-3"
                 onClick={() => navigate("/")}
             >
