@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "../../supabaseClient";
-import { useNavigate } from "react-router";
 
 interface SessionState {
   session: Session | null;

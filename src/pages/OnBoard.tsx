@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import IntroCard from "@/components/IntroCard";
-import { easeInOut, motion, AnimatePresence } from "motion/react"
+import { easeInOut, motion } from "motion/react"
 
 
 import ethereum from "@/assets/coins/ethereum.svg"
